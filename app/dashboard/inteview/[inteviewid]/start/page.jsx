@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { MockInterview } from '../../../../../utils/schema';
 import { eq } from 'drizzle-orm';
 import { db } from '../../../../../utils/db'; // Ensure db is imported correctly
-import QutionSection from './_components/QutionSection';
+import QuestionSection from './_components/QuestionSection';
 import RecordAnswer from './_components/RecordAnswer';
 
 function StartInterviewPage({ params }) {
@@ -61,7 +61,7 @@ function StartInterviewPage({ params }) {
            
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                     {/* Pass the mockInterviewQuestions to the QutionSection component */}
-                    <QutionSection mockInterviewQuestions={mockInterviewQuestions} 
+                    <QuestionSection mockInterviewQuestions={mockInterviewQuestions} 
                     activecursorindex={activecursorindex}/>
                     <RecordAnswer
                     mockInterviewQuestions={mockInterviewQuestions}

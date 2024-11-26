@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiVolume2 } from 'react-icons/fi'; // Import the Volume2 icon
 
-function QutionSection({ mockInterviewQuestions, activecursorindex }) {
+function QuestionSection({ mockInterviewQuestions, activecursorindex }) {
     console.log("imported mock", mockInterviewQuestions);
 
     // Access the interviewQuestions array
@@ -60,4 +60,4 @@ function QutionSection({ mockInterviewQuestions, activecursorindex }) {
     );
 }
 
-export default QutionSection;
+export default QuestionSection;

@@ -73,14 +73,14 @@ function AddNewInterview() {
         console.log("Projects and Skills Combined:", formattedResume);
 
         const inputPrompt = `Here are the details about my job and experience: 
-Job Role / Position: ${jobRole}, 
-Job Description / Tech Stack: ${jobDescription}, 
-Years of Experience: ${jobExperience}, 
-Projects and Skills: ${formattedResume}. 
+                                Job Role / Position: ${jobRole}, 
+                                Job Description / Tech Stack: ${jobDescription}, 
+                                Years of Experience: ${jobExperience}, 
+                                Projects and Skills: ${formattedResume}. 
 
-Please generate 10 interview questions for the Full Stack Developer role, starting with an introduction question. Including the introduction, it should be a total of 11 questions. For each question, provide corresponding answers based on the details I've provided. The answers should reflect a person with ${jobExperience} years in this role. The complexity of both the questions and answers should be aligned with real-world interviews for someone at this experience level, with common questions that have been asked in previous interviews. Ensure that the answers are detailed but appropriate for someone with ${jobExperience} years in this job. 
+                                Please generate 10 interview questions for the Full Stack Developer role, starting with an introduction question. Including the introduction, it should be a total of 11 questions. For each question, provide corresponding answers based on the details I've provided. The answers should reflect a person with ${jobExperience} years in this role. The complexity of both the questions and answers should be aligned with real-world interviews for someone at this experience level, with common questions that have been asked in previous interviews. Ensure that the answers are detailed but appropriate for someone with ${jobExperience} years in this job. 
 
-The response should be in pure JSON format without any code fences or additional text.`;
+                                The response should be in pure JSON format without any code fences or additional text.`;
 
         try {
             // Create a new chat session
@@ -121,7 +121,7 @@ The response should be in pure JSON format without any code fences or additional
             }
         else
         {
-            console.log("getting error to insert brohhh.........");
+            console.log("getting error to insert.........");
         }
             if (jsonResponse) {
                 console.log("Parsed JSON Response:", jsonResponse);
