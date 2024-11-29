@@ -59,7 +59,7 @@ function Interview({ params }) {
       <div className="w-full mb-6 p-4 bg-red-100 text-red-800 rounded-lg shadow-md">
         <h3 className="text-lg font-bold">Important Instructions</h3>
         <p>
-          Please enable your webcam to start the interview. You will be asked 11
+          Please enable your webcam to start the interview. You will be asked 10
           questions, and based on your responses, a detailed report will be
           generated at the end.
         </p>

@@ -1,12 +1,16 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { db } from '../../../../../utils/db'; // Ensure db is imported correctly
 import { MockInterview } from '../../../../../utils/schema';
 import { eq } from 'drizzle-orm';
-import { db } from '../../../../../utils/db'; // Ensure db is imported correctly
 import QuestionSection from './_components/QuestionSection';
 import RecordAnswer from './_components/RecordAnswer';
+// import { Button } from '../../../_components/@/components/ui/button';
+// import Link from 'next/link';
 
 function StartInterviewPage({ params }) {
+
+    // Edit 1
     const [interviewData, setInterviewData] = useState(null); // Initialize with null
     const [mockInterviewQuestions, setMockInterviewQuestions] = useState(null); // Initialize with null
     const [activecursorindex,setactivecursorindex]=useState(0);
@@ -21,7 +25,7 @@ function StartInterviewPage({ params }) {
         try {
             const result = await db
                 .select()
-                .from(MockInterview)
+                .from(MockInterview)    
                 .where(eq(MockInterview.mockId, params.inteviewid));
     
             console.log("Database result:", result);
@@ -67,7 +71,7 @@ function StartInterviewPage({ params }) {
                     mockInterviewQuestions={mockInterviewQuestions}
                     activecursorindex={activecursorindex}
                     />
-        </div>
+                </div>
         </div>
     );
 }
