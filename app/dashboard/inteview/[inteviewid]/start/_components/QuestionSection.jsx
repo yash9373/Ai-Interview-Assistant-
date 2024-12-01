@@ -2,10 +2,10 @@ import React from 'react';
 import { FiVolume2 } from 'react-icons/fi'; // Import the Volume2 icon
 
 function QuestionSection({ mockInterviewQuestions, activecursorindex }) {
-    console.log("imported mock", mockInterviewQuestions);
+    // console.log("imported mock", mockInterviewQuestions);
 
     // Access the interviewQuestions array from the passed mockInterviewQuestions
-    const questions = mockInterviewQuestions?.questions;
+    const questions = mockInterviewQuestions?.interviewQuestions || mockInterviewQuestions?.questions || [];
     console.log("questions", questions);
 
     // Text-to-speech function

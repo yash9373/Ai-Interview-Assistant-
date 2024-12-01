@@ -6,17 +6,27 @@ import { FaRegLaughSquint } from 'react-icons/fa';
 import Image from "next/image";
 import useSpeechToText from 'react-hook-speech-to-text';
 import { toast } from 'sonner';
-import { GoogleGenerativeAI, ChatSession } from '@google/generative-ai';
+import { useUser } from '@clerk/nextjs';
+import { db } from '../../../../../../utils/db';
+import { UserAnswer } from '../../../../../../utils/schema';
+import moment from 'moment';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Button } from '../../../../_components/@/components/ui/button';
+import { StopCircle } from 'lucide-react';
+import { Mic } from 'lucide-react';
 
-function RecordAnswer({ mockInterviewQuestions, activecursorindex }) {
+const MODEL_NAME = 'gemini-pro';
+
+function RecordAnswer({ mockInterviewQuestions, activecursorindex, interviewData }) {
     const webcamRef = useRef(null);
+    const [userAnswer, setUserAnswer] = useState('');
+    const [loading, setLoading] = useState(false);
     const [webcamEnabled, setWebcamEnabled] = useState(true);
     const [permissionDenied, setPermissionDenied] = useState(false);
-    const [useranswer, setUserAnswer] = useState('');
-    const [loading, setLoading] = useState(false); // For loading state
-    const [error, setError] = useState(null); // For error handling
+    const { user } = useUser();
 
-    const questions = mockInterviewQuestions?.interviewQuestions || [];
+    const questions = mockInterviewQuestions?.interviewQuestions || 
+                     mockInterviewQuestions?.questions || [];
 
     const {
         error: speechError,
@@ -25,18 +35,21 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex }) {
         results,
         startSpeechToText,
         stopSpeechToText,
+        setResults
     } = useSpeechToText({
         continuous: true,
-        useLegacyResults: false,
+        useLegacyResults: false
     });
 
     const checkPermissions = async () => {
         try {
-            const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: true, 
+                audio: true 
+            });
             setWebcamEnabled(true);
-            videoStream.getTracks().forEach(track => track.stop());
-            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioStream.getTracks().forEach(track => track.stop());
+            setPermissionDenied(false);
+            stream.getTracks().forEach(track => track.stop());
         } catch (error) {
             console.error('Permission denied or not available:', error);
             setWebcamEnabled(false);
@@ -46,130 +59,152 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex }) {
 
     useEffect(() => {
         checkPermissions();
+        return () => {
+            if (isRecording) {
+                stopSpeechToText();
+            }
+        };
     }, []);
 
     useEffect(() => {
-        const newAnswer = results.map(result => result.transcript).join(' ');
-        setUserAnswer(newAnswer);
+        setUserAnswer('');
+        setResults([]);
+        setLoading(false);
+    }, [activecursorindex]);
+
+    useEffect(() => {
+        const newTranscript = results.map(result => result.transcript).join(' ');
+        setUserAnswer(newTranscript);
     }, [results]);
 
-    const handleRecordingToggle = () => {
+    useEffect(() => {
+        if (!isRecording && userAnswer?.length > 10) {
+            UpdateUserAnswer();
+        }
+    }, [userAnswer, isRecording]);
+
+    const startStopRecording = async () => {
         if (isRecording) {
             stopSpeechToText();
         } else {
+            setResults([]);
+            setUserAnswer('');
             startSpeechToText();
         }
     };
 
-    const saveUserAnswer = async () => {
-        if (isRecording) {
-            stopSpeechToText();
-
-            if (useranswer?.length < 10) {
-                toast('Error While Saving Answer, please record again');
-                return;
-            }
-
-            const feedbackPrompt = `Question: ${questions[activecursorindex]?.question}. User answer: ${useranswer}. Based on the user answer for the given question, give me a rating and an area for improvement (if any) in just 2-3 lines. Return the feedback in JSON format with 'rating' (out of 10) and 'feedback' fields.`;
-
-            // Initialize ChatSession with your Google API key
-            const chatSession = new ChatSession({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
-
-            setLoading(true); // Set loading state
-
-            try {
-                const response = await chatSession.sendMessage(feedbackPrompt);
-                const cleanResponse = response.message.replace(/```json/, '').replace(/```/, '').trim();
-
-                // Attempt to parse JSON response
-                const jsonResponse = parseAIResponse(cleanResponse);
-                if (jsonResponse) {
-                    console.log("Parsed JSON Response:", jsonResponse);
-                    // You can handle the JSON response further here (e.g., displaying it, storing it, etc.)
-                } else {
-                    setError("Failed to parse the AI's response. Please try again.");
-                }
-            } catch (error) {
-                console.error("Error while sending message:", error);
-                setError("Error while sending the message to AI.");
-                toast('Error while sending the message to AI.');
-            } finally {
-                setLoading(false); // Reset loading state
-            }
-        } else {
-            startSpeechToText();
-        }
-    };
-
-    const parseAIResponse = (responseText) => {
-        let jsonString = responseText.trim();
+    const UpdateUserAnswer = async () => {
+        console.log(userAnswer);
+        setLoading(true);
 
         try {
-            return JSON.parse(jsonString);
-        } catch (err) {
-            console.error("Failed to parse JSON:", err);
-            console.error("Response received:", jsonString);
-            return null;
+            const feedbackPrompt = `Question: ${questions[activecursorindex]?.question}. User answer: ${userAnswer}. Based on the user answer for the given question, give me a rating and an area for improvement (if any) in just 2-3 lines. Return the feedback in JSON format with 'rating' (out of 10) and 'feedback' fields.`;
+
+            const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+            const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+            
+            const result = await model.generateContent(feedbackPrompt);
+            const response = await result.response;
+            const mockResponse = (response.text())
+                .replace(/```json/g, '')
+                .replace(/```/g, '')
+                .trim();
+            
+            const JsonFeedbackResp = JSON.parse(mockResponse);
+
+            const resp = await db.insert(UserAnswer).values({
+                mockIdRef: interviewData?.mockId,
+                question: questions[activecursorindex]?.question,
+                correctAns: questions[activecursorindex]?.answer,
+                userAns: userAnswer,
+                feedback: JsonFeedbackResp?.feedback,
+                rating: JsonFeedbackResp?.rating,
+                userEmail: user?.primaryEmailAddress?.emailAddress,
+                createdAt: moment().format('DD-MM-YYYY')
+            });
+
+            if (resp) {
+                toast('User Answer recorded successfully');
+                setUserAnswer('');
+                setResults([]);
+                toast.success(`Rating: ${JsonFeedbackResp.rating}/10`);
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('Failed to process answer');
+        } finally {
+            setLoading(false);
         }
     };
-
-    const combinedTranscription = results.map(result => result.transcript).join(' ');
 
     if (speechError) return <p>Web Speech API is not available in this browser 🤷‍</p>;
 
     return (
-        <div className="p-4 border rounded-lg bg-gray-100 grid grid-cols-1 justify-center items-center">
+        <div className="p-4 border rounded-lg bg-gray-100">
             {webcamEnabled ? (
                 <>
                     <Webcam
                         audio={false}
                         ref={webcamRef}
-                        style={{
-                            width: "100%",
-                            height: 400,
-                            objectFit: "cover",
-                        }}
-                        className='mb-5 rounded-sm'
+                        style={{ width: "100%", height: 400, objectFit: "cover" }}
+                        className="mb-5 rounded-sm"
                     />
                     <div className="mb-4">
-                        <button
-                            onClick={saveUserAnswer}
-                            className={`px-4 py-2 rounded ${isRecording ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}
+                        <Button
+                            onClick={startStopRecording}
+                            className="my-10"
+                            disabled={loading}
                         >
-                            {isRecording ? 'Stop Recording' : 'Start Recording'}
-                        </button>
+                            {isRecording ? (
+                                <h2 className="text-red-600 animate-pulse flex gap-2 items-center">
+                                    <StopCircle />
+                                    Stop Recording
+                                </h2>
+                            ) : (
+                                <h2 className="text-primary flex gap-2 items-center">
+                                    <Mic />
+                                    Start Recording
+                                </h2>
+                            )}
+                        </Button>
                     </div>
+
                     <div className="mb-4">
-                        <h2 className="text-lg font-semibold">Recording Status: {isRecording ? 'Recording...' : 'Not Recording'}</h2>
+                        <h2 className="text-lg font-semibold">
+                            Recording Status: {isRecording ? "Recording..." : "Not Recording"}
+                        </h2>
                     </div>
+
                     <div className="mb-4 w-full">
-                        <h3 className="text-md font-medium">Transcriptions:</h3>
+                        <h3 className="text-md font-medium">Transcription:</h3>
                         <p className="bg-white p-2 rounded text-gray-800">
-                            {combinedTranscription}
-                            {interimResult && <span className="italic text-gray-500"> {interimResult}</span>}
+                            {userAnswer}
+                            {interimResult && (
+                                <span className="italic text-gray-500"> {interimResult}</span>
+                            )}
                         </p>
                     </div>
-                    {error && (
-                        <div className="mt-4">
-                            <span className="text-red-500">{error}</span>
-                        </div>
-                    )}
                 </>
             ) : (
                 <div className="flex flex-col items-center">
                     {permissionDenied ? (
-                        <Image src="/touc.jpeg" width={550} height={400} alt="Webcam access denied" className="mb-4" />
+                        <Image
+                            src="/touc.jpeg"
+                            width={550}
+                            height={400}
+                            alt="Webcam access denied"
+                            className="mb-4"
+                        />
                     ) : (
                         <FaRegLaughSquint className="text-6xl mb-4 text-gray-400" />
                     )}
                     <p className="text-lg text-center">
-                        Webcam is not available! In the left corner, you will see the "i" icon. Click on it and allow the camera.
+                        Webcam is not available! In the left corner, you will see the "i"
+                        icon. Click on it and allow the camera.
                     </p>
                 </div>
             )}
-            <button onClick={() => console.log(useranswer)} className="px-4 py-2 bg-green-500 text-white rounded">
-                Log Answer
-            </button>
         </div>
     );
 }

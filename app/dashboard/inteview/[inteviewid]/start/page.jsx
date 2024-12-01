@@ -5,8 +5,8 @@ import { MockInterview } from '../../../../../utils/schema';
 import { eq } from 'drizzle-orm';
 import QuestionSection from './_components/QuestionSection';
 import RecordAnswer from './_components/RecordAnswer';
-// import { Button } from '../../../_components/@/components/ui/button';
-// import Link from 'next/link';
+import { Button } from '../../../_components/@/components/ui/button';
+import Link from 'next/link';
 
 function StartInterviewPage({ params }) {
 
@@ -36,7 +36,7 @@ function StartInterviewPage({ params }) {
     
                 // Check if jsonmockresponse is defined and not empty
                 if (interview.jsonMockresponse && typeof interview.jsonMockresponse === 'string') {
-                    console.log("Raw JSON response:", interview.jsonMockresponse);
+                    // console.log("Raw JSON response:", interview.jsonMockresponse);
                     try {
                         const jsonmockResponse = JSON.parse(interview.jsonMockresponse);
                         setMockInterviewQuestions(jsonmockResponse); // Schedule state update
@@ -46,7 +46,7 @@ function StartInterviewPage({ params }) {
                         console.error("Error parsing JSON:", parseError);
                     }
                 } else {
-                    console.warn("jsonmockresponse is not available, empty, or invalid.");
+                    // console.warn("jsonmockresponse is not available, empty, or invalid.");
                 }
             } else {
                 console.warn("No data found for the given interview ID.");
@@ -67,10 +67,36 @@ function StartInterviewPage({ params }) {
                     {/* Pass the mockInterviewQuestions to the QutionSection component */}
                     <QuestionSection mockInterviewQuestions={mockInterviewQuestions} 
                     activecursorindex={activecursorindex}/>
+                    
                     <RecordAnswer
                     mockInterviewQuestions={mockInterviewQuestions}
                     activecursorindex={activecursorindex}
+                    interviewData={interviewData}
                     />
+                </div>
+                <div className='flex px-4 py-2 justify-end gap-6'>
+                    { activecursorindex>0 && 
+                        <Button className="px-4 py-2 rounded bg-blue-500 text-white" onClick={()=>setactivecursorindex(activecursorindex-1)}>Previous Question</Button>
+                    }
+                                 { activecursorindex < ((mockInterviewQuestions?.interviewQuestions?.length || 
+                                                           mockInterviewQuestions?.questions?.length || 0) - 1) && (
+           <Button 
+               className="px-4 py-2 rounded bg-blue-500 text-white"
+               onClick={() => setactivecursorindex(activecursorindex + 1)}
+           >
+               Next Question
+           </Button>
+)}
+
+{activecursorindex === ((mockInterviewQuestions?.interviewQuestions?.length || 
+                         mockInterviewQuestions?.questions?.length || 0) - 1) && (
+    <Link href={'/dashboard/inteview/'+interviewData?.mockId+"/feedback"}
+    >
+        <Button className="px-4 py-2 rounded bg-blue-500 text-white">
+            End Interview
+        </Button>
+    </Link>
+)}
                 </div>
         </div>
     );
