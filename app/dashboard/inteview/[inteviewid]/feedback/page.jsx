@@ -21,9 +21,13 @@ function Feedback({params}) {
         GetFeedback();
     },[])
     const GetFeedback=async()=>{
+
+      console.log("Params received:", params);
+      console.log("Interview ID:", params.inteviewid);
+      
         const result=await db.select()
         .from(UserAnswer)
-        .where(eq(UserAnswer.mockIdRef,params.interviewId))
+        .where(eq(UserAnswer.mockIdRef,params.inteviewid))
         .orderBy(UserAnswer.id);
 
         console.log(result);
