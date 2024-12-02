@@ -9,7 +9,7 @@ import {
     CollapsibleTrigger,
   } from 'D:/COLLEGE/Btech Project/Ai-Interview-Assistant-/@/components/ui/collapsible.jsx'
 import { ChevronsUpDown } from 'lucide-react'
-import { Button } from 'D:/COLLEGE/Btech Project/Ai-Interview-Assistant-/@/components/ui/button'
+import { Button } from '../../../_components/@/components/ui/button'
 import { useRouter } from 'next/navigation'
 
 

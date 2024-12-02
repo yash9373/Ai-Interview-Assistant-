@@ -153,16 +153,16 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex, interviewData
                     <div className="mb-4">
                         <Button
                             onClick={startStopRecording}
-                            className="my-10"
+                            variant={isRecording ? "recording" : "default"}
                             disabled={loading}
                         >
                             {isRecording ? (
-                                <h2 className="text-red-600 animate-pulse flex gap-2 items-center">
+                                <h2 className="flex gap-2 items-center">
                                     <StopCircle />
                                     Stop Recording
                                 </h2>
                             ) : (
-                                <h2 className="text-primary flex gap-2 items-center">
+                                <h2 className="flex gap-2 items-center">
                                     <Mic />
                                     Start Recording
                                 </h2>
@@ -172,7 +172,7 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex, interviewData
 
                     <div className="mb-4">
                         <h2 className="text-lg font-semibold">
-                            Recording Status: {isRecording ? "Recording..." : "Not Recording"}
+                            {/* Recording Status: {isRecording ? "Recording..." : "Not Recording"} */}
                         </h2>
                     </div>
 

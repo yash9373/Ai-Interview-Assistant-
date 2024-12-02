@@ -37,7 +37,7 @@ function QuestionSection({ mockInterviewQuestions, activecursorindex }) {
                     ))
                 ) : (
                     <h2 className="col-span-full text-center text-red-500">
-                        No questions available.
+                        Loading Question.
                     </h2>
                 )}
             </div>
