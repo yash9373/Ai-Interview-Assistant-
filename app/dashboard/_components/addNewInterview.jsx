@@ -200,8 +200,6 @@ function AddNewInterview() {
                                 {/* Action Buttons */}
                                 <div className='flex gap-5 justify-end'>
                                     <Button
-                                        variant="outline"
-                                        className="bg-blue-500 text-white hover:bg-blue-600"
                                         type='submit'
                                         disabled={loading}
                                     >
