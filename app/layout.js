@@ -3,6 +3,7 @@ import "./globals.css";
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { Toaster } from "../@/components/ui/sonner"
 
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -21,16 +22,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>    
-      <html lang="en">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+        >
+        <ClerkProvider>    
         <Toaster />
         {children}
+        </ClerkProvider>
       </body>
     </html>
-    </ClerkProvider>
 
   );
 }
