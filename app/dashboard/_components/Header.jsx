@@ -18,6 +18,12 @@ const Header = () => {
     setIsMobileMenuOpen((prevState) => !prevState);
   };
 
+  const getLinkClassNames = (route) => {
+    return `text-gray-700 hover:text-blue-500 dark:text-white dark:hover:text-blue-400 transition ${
+      path === route ? "font-bold text-blue-500" : ""
+    }`;
+  };
+
   return (
     <header className="bg-white shadow-lg dark:bg-gray-900">
       {/* Container for the header content */}
@@ -39,47 +45,20 @@ const Header = () => {
           {/* Navigation Links - Hidden on small screens, visible on medium and larger screens */}
           <nav className="hidden md:flex space-x-8">
             {/* Dashboard Link */}
-            <a
-              href="/dashboard"
-              className={`text-gray-700 hover:text-blue-500 dark:text-white dark:hover:text-blue-400 transition ${
-                path === "/dashboard" ? "font-bold text-blue-500" : ""
-              }`}
-            >
+            <a href="/dashboard" className={getLinkClassNames("/dashboard")}>
               Dashboard
             </a>
 
             {/* How it Works Link */}
-            <a
-              href="#how-it-works"
-              className={`text-gray-700 hover:text-blue-500 dark:text-white dark:hover:text-blue-400 transition ${
-                path === "/how-it-works" ? "font-bold text-blue-500" : ""
-              }`}
-            >
+            <a href="/hiw" className={getLinkClassNames("/hiw")}>
               How it Works
             </a>
 
-            {/* Questions Link */}
-            <a
-              href="#questions"
-              className="text-gray-700 hover:text-blue-500 dark:text-white dark:hover:text-blue-400 transition"
-            >
-              Questions
-            </a>
+          
 
             {/* About Link */}
-            <a
-              href="#about"
-              className="text-gray-700 hover:text-blue-500 dark:text-white dark:hover:text-blue-400 transition"
-            >
+            <a href="/about" className={getLinkClassNames("/about")}>
               About
-            </a>
-
-            {/* Contact Link */}
-            <a
-              href="#contact"
-              className="text-gray-700 hover:text-blue-500 dark:text-white dark:hover:text-blue-400 transition"
-            >
-              Contact
             </a>
           </nav>
 
@@ -123,9 +102,7 @@ const Header = () => {
             {/* Dashboard Link */}
             <a
               href="/dashboard"
-              className={`text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition ${
-                path === "/dashboard" ? "font-bold text-blue-500" : ""
-              }`}
+              className={getLinkClassNames("/dashboard")}
               onClick={toggleMobileMenu} // Close the menu when link is clicked
             >
               Dashboard
@@ -133,39 +110,25 @@ const Header = () => {
 
             {/* How it Works Link */}
             <a
-              href="#how-it-works"
-              className="text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition"
+              href="/hiw"
+              className={getLinkClassNames("/hiw")}
               onClick={toggleMobileMenu} // Close the menu when link is clicked
             >
               How it Works
             </a>
 
-            {/* Questions Link */}
-            <a
-              href="#questions"
-              className="text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition"
-              onClick={toggleMobileMenu} // Close the menu when link is clicked
-            >
-              Questions
-            </a>
+           
 
             {/* About Link */}
             <a
-              href="#about"
-              className="text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition"
+              href="/about"
+              className={getLinkClassNames("/about")}
               onClick={toggleMobileMenu} // Close the menu when link is clicked
             >
               About
             </a>
 
-            {/* Contact Link */}
-            <a
-              href="#contact"
-              className="text-gray-700 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition"
-              onClick={toggleMobileMenu} // Close the menu when link is clicked
-            >
-              Contact
-            </a>
+           
           </nav>
         </div>
       )}

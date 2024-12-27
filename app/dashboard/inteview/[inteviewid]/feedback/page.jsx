@@ -4,10 +4,8 @@ import { UserAnswer } from '../../../../../utils/schema'
 import { eq } from 'drizzle-orm'
 import React, { useEffect, useState } from 'react'
 import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-  } from 'D:/COLLEGE/Btech Project/Ai-Interview-Assistant-/@/components/ui/collapsible.jsx'
+  Collapsible, CollapsibleTrigger, CollapsibleContent
+  } from '../../../_components/@/components/ui/collapsible'
 import { ChevronsUpDown } from 'lucide-react'
 import { Button } from '../../../_components/@/components/ui/button'
 import { useRouter } from 'next/navigation'
