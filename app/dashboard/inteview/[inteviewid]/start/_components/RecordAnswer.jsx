@@ -52,7 +52,7 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex, interviewData
             setPermissionDenied(false);
             stream.getTracks().forEach(track => track.stop());
         } catch (error) {
-            console.error('Permission denied or not available:', error);
+            // console.error('Permission denied or not available:', error);
             setWebcamEnabled(false);
             setPermissionDenied(true);
         }
@@ -95,7 +95,7 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex, interviewData
     };
 
     const UpdateUserAnswer = async () => {
-        console.log(userAnswer);
+        // console.log(userAnswer);
         setLoading(true);
 
         try {
@@ -132,7 +132,7 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex, interviewData
             }
 
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
             toast.error('Failed to process answer');
         } finally {
             setLoading(false);

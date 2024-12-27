@@ -19,8 +19,8 @@ function Feedback({ params }) {
     GetFeedback();
   }, []);
   const GetFeedback = async () => {
-    console.log("Params received:", params);
-    console.log("Interview ID:", params.inteviewid);
+    // console.log("Params received:", params);
+    // console.log("Interview ID:", params.inteviewid);
 
     const result = await db
       .select()
@@ -28,7 +28,7 @@ function Feedback({ params }) {
       .where(eq(UserAnswer.mockIdRef, params.inteviewid))
       .orderBy(UserAnswer.id);
 
-    console.log(result);
+    // console.log(result);
     setFeedbackList(result);
   };
 
@@ -66,17 +66,16 @@ function Feedback({ params }) {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="flex flex-col gap-2 p-5 rounded-lg shadow-md">
-                    <h2 className="text-red-500 p-2 rounded-lg bg-red-50 text-sm text-red-900 font-mono">
+                    <h2 className={`p-2 rounded-lg ${
+                      parseInt(item.rating) < 5 ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
+                    } text-sm font-mono`}>
                       <strong>Rating:</strong> {item.rating}
                     </h2>
-                    <h2 className="p-2 rounded-lg bg-red-50 text-sm text-red-900 font-mono">
+                    <h2 className="p-2 rounded-lg bg-gray-50 text-sm text-gray-700 font-mono">
                       <strong>Your Answer: </strong> {item.userAns}
                     </h2>
-                    <h2 className="p-2 rounded-lg bg-green-50 text-sm text-green-900 font-mono">
+                    <h2 className="p-2 rounded-lg bg-green-50 text-sm text-green-700 font-mono">
                       <strong>Correct Answer: </strong> {item.correctAns}
-                    </h2>
-                    <h2 className="p-2 rounded-lg bg-blue-50 text-sm text-primary">
-                      <strong>Feedback: </strong> {item.feedback}
                     </h2>
                   </div>
                 </CollapsibleContent>

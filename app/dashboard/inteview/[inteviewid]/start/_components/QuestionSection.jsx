@@ -7,7 +7,7 @@ function QuestionSection({ mockInterviewQuestions, activecursorindex }) {
 
     // Access the interviewQuestions array from the passed mockInterviewQuestions
     const questions = mockInterviewQuestions?.interviewQuestions || mockInterviewQuestions?.questions || [];
-    console.log("questions", questions);
+    // console.log("questions", questions);
 
     // Text-to-speech function
     const textToSpeech = (text) => {
