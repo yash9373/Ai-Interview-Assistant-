@@ -12,8 +12,9 @@ import { UserAnswer } from '../../../../../../utils/schema';
 import moment from 'moment';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Button } from '../../../../_components/@/components/ui/button';
-import { StopCircle } from 'lucide-react';
-import { Mic } from 'lucide-react';
+// import { StopCircle } from 'lucide-react';
+// import { Mic } from 'lucide-react';
+import { Mic, StopCircle, Camera, AlertCircle } from 'lucide-react';
 
 const MODEL_NAME = 'gemini-pro';
 
@@ -141,71 +142,96 @@ function RecordAnswer({ mockInterviewQuestions, activecursorindex, interviewData
     if (speechError) return <p>Web Speech API is not available in this browser 🤷‍</p>;
 
     return (
-        <div className="p-4 border rounded-lg bg-gray-100">
-            {webcamEnabled ? (
-                <>
-                    <Webcam
-                        audio={false}
-                        ref={webcamRef}
-                        style={{ width: "100%", height: 400, objectFit: "cover" }}
-                        className="mb-5 rounded-sm"
-                    />
-                    <div className="mb-4">
-                        <Button
-                            onClick={startStopRecording}
-                            variant={isRecording ? "recording" : "default"}
-                            disabled={loading}
-                        >
-                            {isRecording ? (
-                                <h2 className="flex gap-2 items-center">
-                                    <StopCircle />
-                                    Stop Recording
-                                </h2>
-                            ) : (
-                                <h2 className="flex gap-2 items-center">
-                                    <Mic />
-                                    Start Recording
-                                </h2>
-                            )}
-                        </Button>
-                    </div>
+        <div className="bg-gradient-to-b from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200 shadow-sm">
+      {webcamEnabled ? (
+        <div className="space-y-6">
+          {/* Webcam Display */}
+          <div className="relative rounded-xl overflow-hidden shadow-lg">
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              className="w-full h-[400px] object-cover"
+            />
+            {isRecording && (
+              <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-500 px-3 py-1 rounded-full text-white text-sm animate-pulse">
+                <div className="w-2 h-2 bg-white rounded-full" />
+                Recording
+              </div>
+            )}
+          </div>
 
-                    <div className="mb-4">
-                        <h2 className="text-lg font-semibold">
-                            {/* Recording Status: {isRecording ? "Recording..." : "Not Recording"} */}
-                        </h2>
-                    </div>
+          {/* Recording Controls */}
+          <div className="flex items-center justify-between">
+            <Button
+              onClick={startStopRecording}
+              disabled={loading}
+              className={`${
+                isRecording 
+                  ? 'bg-red-500 hover:bg-red-600' 
+                  : 'bg-blue-500 hover:bg-blue-600'
+              } text-white px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105`}
+            >
+              <div className="flex items-center gap-2">
+                {isRecording ? (
+                  <>
+                    <StopCircle className="w-5 h-5" />
+                    Stop Recording
+                  </>
+                ) : (
+                  <>
+                    <Mic className="w-5 h-5" />
+                    Start Recording
+                  </>
+                )}
+              </div>
+            </Button>
 
-                    <div className="mb-4 w-full">
-                        <h3 className="text-md font-medium">Transcription:</h3>
-                        <p className="bg-white p-2 rounded text-gray-800">
-                            {userAnswer}
-                            {interimResult && (
-                                <span className="italic text-gray-500"> {interimResult}</span>
-                            )}
-                        </p>
-                    </div>
-                </>
-            ) : (
-                <div className="flex flex-col items-center">
-                    {permissionDenied ? (
-                        <Image
-                            src="/touc.jpeg"
-                            width={550}
-                            height={400}
-                            alt="Webcam access denied"
-                            className="mb-4"
-                        />
-                    ) : (
-                        <FaRegLaughSquint className="text-6xl mb-4 text-gray-400" />
+            {loading && (
+              <div className="flex items-center gap-2 text-gray-500">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-500" />
+                Processing...
+              </div>
+            )}
+          </div>
+
+          
+        {/* Transcription Area */}
+            <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-gray-700">Live Transcription</h3>
+                <div className="bg-white rounded-lg p-4 max-h-[100px] overflow-y-auto border border-gray-200 shadow-inner">
+                    <p className="text-gray-800 whitespace-pre-wrap">
+                    {userAnswer}
+                    {interimResult && (
+                        <span className="text-gray-400 italic"> {interimResult}</span>
                     )}
-                    <p className="text-lg text-center">
-                        Webcam is not available! In the left corner, you will see the "i"
-                        icon. Click on it and allow the camera.
                     </p>
                 </div>
-            )}
+            </div>
         </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 px-4 space-y-6">
+          <div className="bg-gray-100 p-6 rounded-full">
+            <Camera className="w-16 h-16 text-gray-400" />
+          </div>
+          
+          <div className="text-center space-y-2 max-w-md">
+            <h3 className="text-xl font-semibold text-gray-800">
+              {permissionDenied ? 'Camera Access Required' : 'Camera Not Available'}
+            </h3>
+            <p className="text-gray-600">
+              {permissionDenied ? (
+                <span className="flex items-center justify-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-amber-500" />
+                  Please click the camera icon in your browser's address bar and allow access to continue.
+                </span>
+              ) : (
+                'Please enable your camera to begin the interview session.'
+              )}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
     );
 }
 
