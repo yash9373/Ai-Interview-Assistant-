@@ -3,7 +3,7 @@
 import React from 'react';
 import { UserButton, useUser } from '@clerk/nextjs';
 import AddNewInterview from './_components/addNewInterview';
-import InterviewList from './_components/InterviewList';
+import InterviewList from './_components/InterviewList' ;
 import { BookOpen, Users, TrendingUp, Target, Clock, Award, Brain } from 'lucide-react';
 
 const Dashboard = () => {
