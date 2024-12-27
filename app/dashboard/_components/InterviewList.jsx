@@ -21,7 +21,7 @@ function InterviewList() {
         .where(eq(MockInterview.createdby,user?.primaryEmailAddress?.emailAddress))
         .orderBy(desc(MockInterview.id));
 
-        console.log(result);
+        // console.log(result);
         setInterviewList(result);
     }
 
@@ -36,8 +36,9 @@ function InterviewList() {
                 key={index} />
             ))
             :
-            [1,2,3,4].map((item,index)=>(
-                <div className='h-[100px] w-full bg-gray-200 animate-pulse rounded-lg '>
+            [1,2,3,4].map((item)=>(
+                <div key={item}className='h-[100px] w-full bg-gray-200 animate-pulse rounded-lg '>
+                    
                 </div>
             ))
         }
