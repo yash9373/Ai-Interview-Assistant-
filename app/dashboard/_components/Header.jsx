@@ -10,7 +10,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State to control mobile menu visibility
 
   useEffect(() => {
-    console.log(path); // Log the current path to the console (useful for debugging)
+    // console.log(path); // Log the current path to the console (useful for debugging)
   }, [path]); // Run this effect whenever the path changes
 
   // Function to toggle the mobile menu's visibility
