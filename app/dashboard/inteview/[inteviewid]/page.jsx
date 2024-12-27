@@ -10,7 +10,7 @@ import Link from "next/link";
 
 function Interview({ params }) {
   useEffect(() => {
-    console.log(params.inteviewid);
+    // console.log(params.inteviewid);
     GetInterviewDetails();
   }, [params.inteviewid]);
 
@@ -20,7 +20,7 @@ function Interview({ params }) {
   const GetInterviewDetails = async () => {
     try {
       if (!params.inteviewid) {
-        console.warn("Interview ID is not provided.");
+        // console.warn("Interview ID is not provided.");
         return;
       }
 
@@ -30,16 +30,16 @@ function Interview({ params }) {
         .from(MockInterview)
         .where(eq(MockInterview.mockId, params.inteviewid));
 
-      console.log("Database result:", result); // Log the result
+      // console.log("Database result:", result); // Log the result
 
       // Check if result is an array and set the first item if available
       if (Array.isArray(result) && result.length > 0) {
         setInterviewData(result[0]); // Assuming you want the first item
       } else {
-        console.warn("No data found for the given interview ID.");
+        // console.warn("No data found for the given interview ID.");
       }
     } catch (error) {
-      console.error("Error fetching interview details:", error);
+      // console.error("Error fetching interview details:", error);
     }
   };
 
@@ -48,7 +48,7 @@ function Interview({ params }) {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       setWebcamEnabled(true);
     } catch (error) {
-      console.error("Error accessing webcam:", error);
+      // console.error("Error accessing webcam:", error);
       alert("Could not access the webcam. Please check your permissions.");
     }
   };

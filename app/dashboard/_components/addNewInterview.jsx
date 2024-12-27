@@ -139,99 +139,116 @@ function AddNewInterview() {
 
     return (
         <div>
-            <div
-                className='p-10 border rounded-lg bg-blue-500 hover:scale-105 hover:shadow-md cursor-pointer transition-all mt-4'
-                onClick={() => setOpenDialog(true)}
+          {/* Trigger Button with Improved CSS */}
+          <div
+            className="py-6 px-8 border-2 rounded-xl bg-blue-600 hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 ease-in-out mt-6 w-fit mx-auto"
+            onClick={() => setOpenDialog(true)}
             >
-                <h2 className='font-bold text-lg text-white text-center'>+ ADD NEW RESUME DETAILS</h2>
+            <h2 className="font-semibold text-xl text-white text-center">
+                <span className="mr-2">+</span>  Add New Resume
+            </h2>
             </div>
-
-            <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent>
-                    <DialogHeader className="max-w-2xl">
-                        <DialogTitle className='text-2xl'>Tell Us About Your Experience</DialogTitle>
-                        <DialogDescription>
-                            <form onSubmit={onSubmit}>
-                                {/* Job Role / Position */}
-                                <div className='mt-7 my-2'>
-                                    <label className='font-bold mb-1'>Job Role / Job Position</label>
-                                    <Input
-                                        placeholder="Ex. Full Stack Developer"
-                                        required
-                                        onChange={(event) => setJobRole(event.target.value)}
-                                    />
-                                </div>
-                                {/* Job Description / Tech Stack */}
-                                <div className='my-3'>
-                                    <label className='font-bold mb-1'>Job Description / Tech Stack</label>
-                                    <Textarea
-                                        placeholder="Ex. Angular, Python, etc."
-                                        required
-                                        onChange={(event) => setJobDescription(event.target.value)}
-                                    />
-                                </div>
-                                {/* Years of Experience */}
-                                <div className='my-3'>
-                                    <label className='font-bold mb-1'>Years of Experience</label>
-                                    <Input
-                                        placeholder="Ex. 1, 2, 4 years"
-                                        required
-                                        onChange={(event) => setJobExperience(event.target.value)}
-                                    />
-                                </div>
-                                {/* Projects and Participations */}
-                                <div className='my-3'>
-                                    <label className='font-bold mb-1'>Projects and Participations</label>
-                                    <Textarea
-                                        placeholder="Enter your project names and descriptions"
-                                        required
-                                        onChange={(event) => setProjects(event.target.value)}
-                                    />
-                                </div>
-                                {/* Skills */}
-                                <div className='my-3'>
-                                    <label className='font-bold mb-1'>Skills</label>
-                                    <Textarea
-                                        placeholder="Enter the skills you have (e.g., Python, Java, communication, etc.)"
-                                        required
-                                        onChange={(event) => setSkills(event.target.value)}
-                                    />
-                                </div>
-                                {/* Action Buttons */}
-                                <div className='flex gap-5 justify-end'>
-                                    <Button
-                                        type='submit'
-                                        disabled={loading}
-                                    >
-                                        {loading ? (
-                                            <>
-                                                <LoaderCircle className='animate-spin' /> Generating from AI...
-                                            </>
-                                        ) : (
-                                            'Start Interview'
-                                        )}
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setOpenDialog(false)}
-                                        disabled={loading} // Optional: Disable cancel during loading
-                                    >
-                                        Cancel
-                                    </Button>
-                                </div>
-                                {/* Error Message */}
-                                {error && (
-                                    <div className="mt-4">
-                                        <span className="text-red-500">{error}</span>
-                                    </div>
-                                )}
-                            </form>
-                        </DialogDescription>
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
+      
+          {/* Dialog Component with Improved CSS */}
+          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+            <DialogContent className="max-w-3xl mx-auto p-4">
+              <DialogHeader className="flex justify-between items-center mb-4">
+                <DialogTitle className="text-2xl font-bold">Tell Us About Your Experience</DialogTitle>
+              </DialogHeader>
+      
+              {/* Form with Improved CSS */}
+              <form onSubmit={onSubmit} className="space-y-5">
+                {/* Job Role / Position */}
+                <div className="my-2">
+                  <label className="font-bold mb-1 block">Job Role / Job Position</label>
+                  <Input
+                    placeholder="Ex. Full Stack Developer"
+                    required
+                    onChange={(event) => setJobRole(event.target.value)}
+                    className="w-full p-2 border border-gray-400 rounded-lg"
+                  />
+                </div>
+      
+                {/* Job Description / Tech Stack */}
+                <div className="my-3">
+                  <label className="font-bold mb-1 block">Job Description / Tech Stack</label>
+                  <Textarea
+                    placeholder="Ex. Angular, Python, etc."
+                    required
+                    onChange={(event) => setJobDescription(event.target.value)}
+                    className="w-full p-2 border border-gray-400 rounded-lg"
+                  />
+                </div>
+      
+                {/* Years of Experience */}
+                <div className="my-3">
+                  <label className="font-bold mb-1 block">Years of Experience</label>
+                  <Input
+                    placeholder="Ex. 1, 2, 4 years"
+                    required
+                    onChange={(event) => setJobExperience(event.target.value)}
+                    className="w-full p-2 border border-gray-400 rounded-lg"
+                  />
+                </div>
+      
+                {/* Projects and Participations */}
+                <div className="my-3">
+                  <label className="font-bold mb-1 block">Projects and Participations</label>
+                  <Textarea
+                    placeholder="Enter your project names and descriptions"
+                    required
+                    onChange={(event) => setProjects(event.target.value)}
+                    className="w-full p-2 border border-gray-400 rounded-lg"
+                  />
+                </div>
+      
+                {/* Skills */}
+                <div className="my-3">
+                  <label className="font-bold mb-1 block">Skills</label>
+                  <Textarea
+                    placeholder="Enter the skills you have (e.g., Python, Java, communication, etc.)"
+                    required
+                    onChange={(event) => setSkills(event.target.value)}
+                    className="w-full p-2 border border-gray-400 rounded-lg"
+                  />
+                </div>
+      
+                {/* Action Buttons with Improved CSS */}
+                <div className="flex gap-5 justify-end mt-6">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    {loading? (
+                      <>
+                        <LoaderCircle className="animate-spin" /> Generating from AI...
+                      </>
+                    ) : (
+                      'Start Interview'
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenDialog(false)}
+                    disabled={loading}
+                    className="border border-gray-400 text-gray-600 font-bold py-2 px-4 rounded hover:bg-gray-100"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+      
+                {/* Error Message with Improved CSS */}
+                {error && (
+                  <div className="mt-4 text-red-500 font-bold">
+                    <span>{error}</span>
+                  </div>
+                )}
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
-    );
+      );
 }
 
 export default AddNewInterview;
